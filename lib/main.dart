@@ -20,27 +20,67 @@ class Calculator extends StatefulWidget {
 
 class _CalculatorState extends State<Calculator> {
   dynamic displaytxt = 20;
+  // Lista para almacenar los colores de fondo de los botones numéricos
+  List<Color> calcButtonColors = [
+    Colors.amber,
+    Colors.grey,
+    const Color.fromARGB(255, 204, 197, 197),
+  ];
+
+  // Lista para almacenar los colores de texto de los botones numéricos
+  List<Color> calcButtonTextColors = [
+    Colors.white,
+    Colors.black,
+    Colors.white,
+  ];
   //Button Widget
-  Widget calcbutton(String btntxt, Color btncolor, Color txtcolor) {
-    return Container(
-      child: ElevatedButton(
-        onPressed: () {
-          calculation(btntxt);
-        },
-        child: Text(
-          '$btntxt',
-          style: TextStyle(
-            fontSize: 35,
-            color: txtcolor,
+  Widget calcbutton(String btntxt, Color btncolor, Color txtcolor, int index) {
+    // Asegúrate de que el índice esté dentro del rango válido
+    if (index >= 0 && index < calcButtonColors.length) {
+      return Container(
+        child: ElevatedButton(
+          onPressed: () {
+            calculation(btntxt);
+          },
+          child: Text(
+            '$btntxt',
+            style: TextStyle(
+              fontSize: 35,
+              color: calcButtonTextColors[index],
+            ),
+          ),
+          style: ElevatedButton.styleFrom(
+            shape: CircleBorder(),
+            primary: calcButtonColors[index],
+            padding: EdgeInsets.all(20),
           ),
         ),
-        style: ElevatedButton.styleFrom(
-          shape: CircleBorder(),
-          primary: btncolor,
-          padding: EdgeInsets.all(20),
-        ),
+      );
+    } else {
+      // Manejar un índice fuera de rango
+      return Container();
+    }
+  }
+
+  ElevatedButton changeColorsButton() {
+    return ElevatedButton(
+      onPressed: changeColors,
+      child: Text('Cambiar Colores'),
+      style: ElevatedButton.styleFrom(
+        primary: const Color.fromARGB(255, 64, 135, 194),
+        onPrimary: Colors.white,
       ),
     );
+  }
+
+  void changeColors() {
+    // Cambiar los colores de los botones numéricos
+    setState(() {
+      for (int i = 0; i <= 2; i++) {
+        calcButtonColors[i] = Color.fromARGB(255, 82, 158, 220);
+        calcButtonTextColors[i] = Colors.white;
+      }
+    });
   }
 
   @override
@@ -57,6 +97,8 @@ class _CalculatorState extends State<Calculator> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
+            // Botón para cambiar colores
+            changeColorsButton(),
             // Calculator display
             SingleChildScrollView(
               scrollDirection: Axis.vertical,
@@ -81,13 +123,13 @@ class _CalculatorState extends State<Calculator> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 calcbutton(
-                    'sin', Color.fromARGB(255, 197, 186, 186), Colors.black),
+                    'sin', Color.fromARGB(255, 197, 186, 186), Colors.black, 1),
                 calcbutton(
-                    'cos', Color.fromARGB(255, 197, 186, 186), Colors.black),
+                    'cos', Color.fromARGB(255, 197, 186, 186), Colors.black, 1),
                 calcbutton(
-                    'tan', Color.fromARGB(255, 197, 186, 186), Colors.black),
+                    'tan', Color.fromARGB(255, 197, 186, 186), Colors.black, 1),
                 calcbutton(
-                    '√', Color.fromARGB(255, 197, 186, 186), Colors.black),
+                    '√', Color.fromARGB(255, 197, 186, 186), Colors.black, 0),
               ],
             ),
             SizedBox(
@@ -97,12 +139,12 @@ class _CalculatorState extends State<Calculator> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 calcbutton(
-                    'AC', Color.fromARGB(255, 197, 186, 186), Colors.black),
+                    'AC', Color.fromARGB(255, 197, 186, 186), Colors.black, 1),
                 calcbutton(
-                    '+/-', Color.fromARGB(255, 197, 186, 186), Colors.black),
+                    '+/-', Color.fromARGB(255, 197, 186, 186), Colors.black, 1),
                 calcbutton(
-                    ' % ', Color.fromARGB(255, 197, 186, 186), Colors.black),
-                calcbutton('/', Colors.amber, Colors.white),
+                    ' % ', Color.fromARGB(255, 197, 186, 186), Colors.black, 1),
+                calcbutton('/', Colors.amber, Colors.white, 0),
               ],
             ),
             SizedBox(
@@ -111,10 +153,10 @@ class _CalculatorState extends State<Calculator> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                calcbutton('7', Colors.grey, Colors.white),
-                calcbutton('8', Colors.grey, Colors.white),
-                calcbutton('9', Colors.grey, Colors.white),
-                calcbutton('x', Colors.amber, Colors.white),
+                calcbutton('7', Colors.grey, Colors.white, 2),
+                calcbutton('8', Colors.grey, Colors.white, 2),
+                calcbutton('9', Colors.grey, Colors.white, 2),
+                calcbutton('x', Colors.amber, Colors.white, 0),
               ],
             ),
             SizedBox(
@@ -123,10 +165,10 @@ class _CalculatorState extends State<Calculator> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                calcbutton('4', Colors.grey, Colors.white),
-                calcbutton('5', Colors.grey, Colors.white),
-                calcbutton('6', Colors.grey, Colors.white),
-                calcbutton('-', Colors.amber, Colors.white),
+                calcbutton('4', Colors.grey, Colors.white, 2),
+                calcbutton('5', Colors.grey, Colors.white, 2),
+                calcbutton('6', Colors.grey, Colors.white, 2),
+                calcbutton('-', Colors.amber, Colors.white, 0),
               ],
             ),
             SizedBox(
@@ -135,10 +177,10 @@ class _CalculatorState extends State<Calculator> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                calcbutton('1', Colors.grey, Colors.white),
-                calcbutton('2', Colors.grey, Colors.white),
-                calcbutton('3', Colors.grey, Colors.white),
-                calcbutton('+', Colors.amber, Colors.white),
+                calcbutton('1', Colors.grey, Colors.white, 2),
+                calcbutton('2', Colors.grey, Colors.white, 2),
+                calcbutton('3', Colors.grey, Colors.white, 2),
+                calcbutton('+', Colors.amber, Colors.white, 0),
               ],
             ),
             SizedBox(
@@ -159,11 +201,14 @@ class _CalculatorState extends State<Calculator> {
                   ),
                   child: Text(
                     '0',
-                    style: TextStyle(fontSize: 35, color: Colors.white),
+                    style: TextStyle(
+                      fontSize: 35,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-                calcbutton('.', Colors.grey, Colors.white),
-                calcbutton('=', Colors.amber, Colors.white),
+                calcbutton('.', Colors.grey, Colors.white, 0),
+                calcbutton('=', Colors.amber, Colors.white, 0),
               ],
             ),
 
@@ -315,5 +360,16 @@ class _CalculatorState extends State<Calculator> {
         return result = splitDecimal[0].toString();
     }
     return result;
+  }
+
+  void main() {
+    runApp(MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Calculadora'),
+        ),
+        body: Calculator(),
+      ),
+    ));
   }
 }
